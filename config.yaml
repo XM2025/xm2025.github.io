@@ -1,0 +1,55 @@
+seed: 42
+
+data:
+  use_ccxt: false           # 若为 true，将优先使用 CCXT 从 binance 拉取日频OHLCV
+  exchange: binance
+  timeframe: 1d
+  limit: 1500
+  cache_dir: cache
+  symbols: [BTC/USDT, ETH/USDT, BNB/USDT, SOL/USDT, XRP/USDT, ADA/USDT, DOGE/USDT, DOT/USDT, LTC/USDT, LINK/USDT]
+  start: 2020-01-01
+  end: 2025-09-01
+  align: intersection       # intersection 或 ffill
+
+features:
+  include_prev_weights: true
+  normalize_cross_section: true
+  list: [
+    momentum_7,
+    momentum_30,
+    volatility_30,
+    volume_z_30,
+    rsi_14,
+    ema_slope_20,
+    price_to_ma_30,
+    reversal_1,
+    corr_with_btc_60
+  ]
+
+env:
+  trading_cost_rate: 0.0005   # 单边成本
+  reward: log_return           # log_return 或 simple_return
+
+rl:
+  total_timesteps: 20000
+  rollout_length: 256
+  n_epochs: 10
+  minibatch_size: 64
+  learning_rate: 3.0e-4
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  entropy_coef: 0.01
+  value_coef: 0.5
+  max_grad_norm: 0.5
+  hidden_sizes: [256, 256]
+  eval_interval: 1000
+
+split:
+  train_end: 2023-12-31
+  val_end: 2024-12-31
+
+output:
+  checkpoints_dir: checkpoints
+  outputs_dir: outputs
+  logs_dir: logs
