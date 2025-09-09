@@ -1,0 +1,201 @@
+{
+  "project_info": {
+    "name": "加密货币量化交易策略系统",
+    "version": "1.0.0",
+    "description": "基于深度强化学习的多资产加密货币交易策略",
+    "author": "AI Assistant",
+    "created": "2024-01-01"
+  },
+  
+  "data_config": {
+    "symbols": [
+      "BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT", "SOLUSDT",
+      "XRPUSDT", "DOTUSDT", "AVAXUSDT", "MATICUSDT", "LTCUSDT",
+      "LINKUSDT", "UNIUSDT", "ATOMUSDT", "XLMUSDT", "BCHUSDT"
+    ],
+    "data_days": 730,
+    "data_interval": "1d",
+    "data_source": "binance",
+    "backup_sources": ["yfinance", "coingecko"],
+    "update_frequency": "daily"
+  },
+  
+  "feature_engineering": {
+    "technical_indicators": true,
+    "cross_asset_features": true,
+    "time_features": true,
+    "lag_features": true,
+    "rolling_features": true,
+    "market_sentiment": true,
+    "volume_analysis": true,
+    "volatility_features": true,
+    "momentum_features": true,
+    "trend_features": true
+  },
+  
+  "environment_config": {
+    "initial_balance": 100000.0,
+    "transaction_fee": 0.001,
+    "slippage": 0.0001,
+    "max_position_size": 0.95,
+    "lookback_window": 60,
+    "reward_scaling": 1.0,
+    "risk_free_rate": 0.02,
+    "rebalance_frequency": "daily",
+    "position_limits": {
+      "single_asset_max": 0.3,
+      "sector_max": 0.6,
+      "cash_min": 0.05
+    }
+  },
+  
+  "agent_config": {
+    "type": "PPO",
+    "architecture": {
+      "hidden_dims": [512, 256, 128],
+      "activation": "relu",
+      "dropout": 0.1,
+      "layer_norm": true
+    },
+    "hyperparameters": {
+      "lr_actor": 3e-4,
+      "lr_critic": 3e-4,
+      "gamma": 0.99,
+      "lambda_gae": 0.95,
+      "clip_epsilon": 0.2,
+      "entropy_coeff": 0.01,
+      "value_coeff": 0.5,
+      "max_grad_norm": 0.5,
+      "ppo_epochs": 10,
+      "batch_size": 64
+    }
+  },
+  
+  "training_config": {
+    "total_timesteps": 100000,
+    "eval_freq": 5000,
+    "save_freq": 10000,
+    "train_test_split": 0.8,
+    "validation_split": 0.1,
+    "early_stopping": {
+      "enabled": true,
+      "patience": 20,
+      "min_delta": 0.001
+    },
+    "learning_schedule": {
+      "type": "cosine",
+      "warmup_steps": 1000,
+      "min_lr": 1e-6
+    }
+  },
+  
+  "optimization_config": {
+    "run_hyperparameter_optimization": true,
+    "run_walk_forward_optimization": false,
+    "run_ensemble_optimization": false,
+    "hyperparameter_trials": 50,
+    "optimization_metric": "sharpe_ratio",
+    "optimization_direction": "maximize",
+    "search_space": {
+      "lr_actor": [1e-5, 1e-2],
+      "lr_critic": [1e-5, 1e-2],
+      "gamma": [0.9, 0.999],
+      "batch_size": [32, 64, 128, 256],
+      "lookback_window": [30, 60, 90, 120],
+      "transaction_fee": [0.0005, 0.002],
+      "reward_scaling": [0.1, 10.0]
+    },
+    "walk_forward": {
+      "train_window": 252,
+      "test_window": 63,
+      "step_size": 21
+    }
+  },
+  
+  "backtesting_config": {
+    "benchmark_symbol": "BTCUSDT",
+    "benchmark_strategy": "buy_and_hold",
+    "save_results": true,
+    "generate_plots": true,
+    "detailed_analysis": true,
+    "risk_metrics": [
+      "sharpe_ratio",
+      "sortino_ratio",
+      "calmar_ratio",
+      "max_drawdown",
+      "var_95",
+      "cvar_95"
+    ],
+    "performance_attribution": true
+  },
+  
+  "risk_management": {
+    "position_sizing": {
+      "method": "kelly",
+      "max_leverage": 1.0,
+      "risk_per_trade": 0.02
+    },
+    "stop_loss": {
+      "enabled": true,
+      "type": "trailing",
+      "percentage": 0.05
+    },
+    "take_profit": {
+      "enabled": true,
+      "risk_reward_ratio": 2.0
+    },
+    "portfolio_heat": {
+      "max_correlation": 0.8,
+      "diversification_requirement": 0.3
+    }
+  },
+  
+  "monitoring_config": {
+    "real_time_monitoring": false,
+    "alerts": {
+      "enabled": true,
+      "channels": ["email", "webhook"],
+      "triggers": [
+        "large_drawdown",
+        "low_sharpe_ratio",
+        "high_volatility",
+        "system_error"
+      ]
+    },
+    "logging": {
+      "level": "INFO",
+      "file_rotation": true,
+      "max_size": "100MB",
+      "backup_count": 5
+    }
+  },
+  
+  "deployment_config": {
+    "mode": "backtest",
+    "paper_trading": {
+      "enabled": false,
+      "initial_balance": 10000
+    },
+    "live_trading": {
+      "enabled": false,
+      "exchange": "binance",
+      "api_credentials": {
+        "use_environment_variables": true
+      }
+    },
+    "model_serving": {
+      "framework": "pytorch",
+      "optimization": "tensorrt",
+      "batch_inference": true
+    }
+  },
+  
+  "paths": {
+    "data_dir": "/workspace/data",
+    "models_dir": "/workspace/models",
+    "results_dir": "/workspace/results",
+    "logs_dir": "/workspace/logs",
+    "plots_dir": "/workspace/plots",
+    "optimization_dir": "/workspace/optimization_results"
+  }
+}
