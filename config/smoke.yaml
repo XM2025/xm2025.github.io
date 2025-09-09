@@ -1,0 +1,47 @@
+random_seed: 42
+
+data:
+  cache_dir: /workspace/data_cache
+  tickers: [BTC-USD, ETH-USD, BNB-USD, ADA-USD]
+  start_date: '2020-01-01'
+  end_date: null
+  interval: '1d'
+  refresh: false
+
+factors:
+  windows:
+    mom: [5, 10]
+    vol: [5, 21]
+    rsi: [14]
+    ema: [10, 21]
+    atr: [14]
+  include_cross_sectional: true
+
+env:
+  transaction_cost_bps: 5.0
+  risk_aversion: 1.0
+  max_weight: 0.5
+  include_cash: true
+
+train:
+  train_start: '2020-01-01'
+  train_end: '2023-12-31'
+  val_start: '2024-01-01'
+  val_end: '2024-12-31'
+  total_timesteps: 10000
+  policy: MlpPolicy
+  learning_rate: 0.0007
+  batch_size: 512
+  n_steps: 512
+  gamma: 0.98
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.005
+  vf_coef: 0.5
+  device: auto
+  artifacts_dir: /workspace/artifacts
+
+optuna:
+  n_trials: 5
+  timeout: 600
+  study_name: crypto_rl_ppo_smoke
