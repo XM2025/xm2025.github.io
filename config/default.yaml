@@ -1,0 +1,58 @@
+random_seed: 42
+
+data:
+  cache_dir: /workspace/data_cache
+  # Mainstream crypto tickers (Yahoo Finance)
+  tickers:
+    - BTC-USD
+    - ETH-USD
+    - BNB-USD
+    - XRP-USD
+    - ADA-USD
+    - SOL-USD
+    - DOGE-USD
+    - DOT-USD
+    - LTC-USD
+    - TRX-USD
+  start_date: '2017-01-01'
+  end_date: null
+  interval: '1d'
+  refresh: false
+
+factors:
+  windows:
+    mom: [5, 10, 21, 63]
+    vol: [5, 21, 63]
+    rsi: [14]
+    ema: [10, 21, 50, 100]
+    atr: [14]
+  include_cross_sectional: true
+
+env:
+  transaction_cost_bps: 5.0
+  risk_aversion: 2.0
+  max_weight: 0.35
+  include_cash: true
+
+train:
+  train_start: '2017-01-01'
+  train_end: '2022-12-31'
+  val_start: '2023-01-01'
+  val_end: '2023-12-31'
+  total_timesteps: 400000
+  policy: MlpPolicy
+  learning_rate: 0.0003
+  batch_size: 2048
+  n_steps: 2048
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  device: auto
+  artifacts_dir: /workspace/artifacts
+
+optuna:
+  n_trials: 20
+  timeout: null
+  study_name: crypto_rl_ppo
